@@ -1,0 +1,76 @@
+﻿{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "PrimaryName": {
+      "type": "string"
+    },
+    "FailoverName": {
+      "type": "string"
+    },
+    "PrimaryLocation": {
+      "type": "string"
+    },
+    "FailoverLocation": {
+      "type": "string"
+    },
+    "Tier": {
+      "type": "string",
+      "defaultValue": "Standard",
+      "allowedValues": [
+        "Basic",
+        "Standard",
+        "Premium"
+      ]
+    },
+    "PrimaryCapacity": {
+      "type": "int",
+      "defaultValue": 1,
+      "allowedValues": [
+        1,
+        2,
+        4
+      ]
+    },
+    "FailoverCapacity": {
+      "type": "int",
+      "defaultValue": 1,
+      "allowedValues": [
+        1,
+        2,
+        4
+      ]
+    }
+  },
+  "variables": {
+    "sku-name": "[concat(parameters('Tier'), 'Sku')]"
+  },
+  "resources": [
+    {
+      "apiVersion": "2015-08-01",
+      "name": "[parameters('PrimaryName')]",
+      "type": "Microsoft.ServiceBus/namespaces",
+      "location": "[parameters('PrimaryLocation')]",
+      "sku": {
+        "name": "[variables('sku-name')]",
+        "tier": "[parameters('PrimaryTier')]",
+        "capacity": "[parameters('PrimaryCapacity')]"
+      },
+      "resources": [ ]
+    },
+    {
+      "apiVersion": "2015-08-01",
+      "name": "[parameters('FailoverName')]",
+      "type": "Microsoft.ServiceBus/namespaces",
+      "location": "[parameters('FailoverLocation')]",
+      "sku": {
+        "name": "[variables('sku-name')]",
+        "tier": "[parameters('Tier')]",
+        "capacity": "[parameters('FailoverCapacity')]"
+      },
+      "resources": [ ]
+    }
+  ],
+  "outputs": {
+  }
+}
